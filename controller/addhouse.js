@@ -18,16 +18,18 @@ var editHome = mongoose.model('editHome');
 
 
 module.exports.addNewListing = function (req, res) {
+   console.log(req, 'tihs is the req')
     dotenv.config();
     var userToken = req.headers['x-access-token'];
     if (!userToken) return res.send("no token provided");
     const decodedEmail = jwt.verify(userToken, process.env.TOKEN_SECRET, function (err, decoded) {
         if (err) return res.send('Failed to authenticate');
         console.log(decoded);
-        console.log(req.body.params);
+        console.log(req.body.params, 'lsyrdjl');
         return decoded
     });
     user.findOne({email: decodedEmail}, function (err, docs) {
+       
         home.create({
             ownerEmail: docs.email,
             ownerName: docs.name,
@@ -41,7 +43,8 @@ module.exports.addNewListing = function (req, res) {
             description : req.body.params.description,
             listingStatus: req.body.params.listingStatus,
             reviewStatus: req.body.params.reviewStatus,
-            dateCreated: moment()
+            dateCreated: moment(),
+            availabilityDate: req.body.params.availabilityDate,
 
         }, function (err, houseDocs) {
             if(err){
@@ -130,6 +133,7 @@ module.exports.editHouseUpdate = function (req, res){
                             listingStatus: req.body.params.listingStatus,
                             reviewStatus: req.body.params.reviewStatus,
                             dateCreated: moment(),
+                            availabilityDate:req.body.params.availabilityDate,
 
                             encodedAvatarUrl: encodedId,
                         }, function (err, productDocs) {
@@ -165,6 +169,7 @@ module.exports.editHouseUpdate = function (req, res){
                             reviewStatus: req.body.params.reviewStatus,
                             originalId: req.body.params.originalId,
                             dateCreated: moment(),
+                            availabilityDate:req.body.params.availabilityDate,
 
                         }, function (err, productDocs) {
                             const encodedId = jwt.sign(`${productDocs._id}`, process.env.TOKEN_SECRET);
@@ -240,6 +245,7 @@ module.exports.editHouseUpdate = function (req, res){
                             listingStatus: req.body.params.listingStatus,
                             reviewStatus: req.body.params.reviewStatus,
                             dateCreated: moment(),
+                            availabilityDate:req.body.params.availabilityDate,
                             editedVersion: false
 
                         }, function (err, versionChangedDocument) {
@@ -277,6 +283,7 @@ module.exports.editHouseUpdate = function (req, res){
                             listingStatus: req.body.params.listingStatus,
                             reviewStatus: req.body.params.reviewStatus,
                             dateCreated: moment(),
+                            availabilityDate:req.body.params.availabilityDate,
                             originalId: req.body.params.originalId,
                         }, function (err, updatedDocument) {
                             if (err) {
